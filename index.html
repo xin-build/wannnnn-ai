@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST-GPT-4o</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"></script>
+    <style>
+        body.light-mode {
+            background-color: #f0f8ff;
+            color: #000000;
+        }
+        body.dark-mode {
+            background-color: #333333;
+            color: #ffffff;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .light-mode .response {
+            background-color: #ffffff;
+            border-color: #ccc;
+            color: #000000;
+        }
+        .dark-mode .response {
+            background-color: #444444;
+            border-color: #555;
+            color: #ffffff;
+        }
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .light-mode .input-container {
+            background-color: #ffffff;
+        }
+        .dark-mode .input-container {
+            background-color: #333333;
+        }
+        .input-container .mdui-textfield-input {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .dark-mode .input-container .mdui-textfield-input {
+            background-color: #666666;
+            color: #ffffff;
+        }
+        .input-container .mdui-textfield {
+            flex: 1;
+            margin-right: 10px;
+        }
+        #countdown {
+            margin-left: 10px;
+            color: red;
+        }
+        #error-message {
+            color: red;
+            font-size: 14px;
+            margin-left: 10px;
+            width: 100%;
+            text-align: center;
+        }
+        .mdui-appbar .mdui-toolbar {
+            height: 56px;
+        }
+        .mdui-toolbar-spacer {
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink light-mode">
+    <div class="mdui-appbar">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a href="javascript:;" class="mdui-typo-title">巨屁踢-四欧</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <button class="mdui-btn mdui-btn-icon" onclick="toggleTheme()">
+                <i class="mdui-icon material-icons">brightness_6</i>
+            </button>
+        </div>
+    </div>
+    <div class="mdui-container" style="padding-bottom: 120px;">
+        <div id="responseContainer"></div>
+    </div>
+    <div class="input-container mdui-shadow-1">
+        <div class="mdui-textfield">
+            <input class="mdui-textfield-input" type="text" id="question" placeholder="输入你的问题"/>
+        </div>
+        <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" id="confirmButton" onclick="sendResponse()">确认</button>
+        <span id="countdown"></span>
+        <span id="error-message"></span>
+    </div>
+
+    <script>
+        const responses = [
+            "听不清楚(⁠─⁠.⁠─⁠|⁠|⁠）",
+            "滚(⁠￣⁠^￣⁠)⁠",
+            "别来烦我ー(￣～￣)ξ",
+            "你个人机！(⁠￣⁠^⁠￣⁠)⁠ 哼！",
+            "大傻逼！(⁠ノ⁠｀⁠⌒⁠´⁠)⁠ノ⁠┫⁠：⁠・⁠┻⁠┻",
+            "网络异常，请重试。",
+            "听不清楚，再说一遍。(⁠￣⁠^ ￣⁠)⁠",
+            "哼，才不理你呢！(￣へ￣)"
+        ];
+
+        let canSend = true;
+        let countdownTimer;
+
+        function sendResponse() {
+            const questionInput = document.getElementById('question');
+            const errorMessage = document.getElementById('error-message');
+            if (!questionInput.value.trim()) {
+                errorMessage.innerText = "不能输入空消息";
+                return;
+            }
+
+            errorMessage.innerText = "";
+            if (!canSend) {
+                return;
+            }
+
+            canSend = false;
+            const responseContainer = document.getElementById('responseContainer');
+            const randomIndex = Math.floor(Math.random() * responses.length);
+            const response = document.createElement('div');
+            response.className = 'response mdui-card mdui-card-content';
+            response.innerText = "正在处理..."; 
+            responseContainer.prepend(response);
+
+            setTimeout(() => {
+                response.innerText = responses[randomIndex]; 
+            }, 2000);
+
+            let countdown = 10;
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.innerText = `请等待 ${countdown} 秒...`;
+
+            countdownTimer = setInterval(() => {
+                countdown -= 1;
+                if (countdown > 0) {
+                    countdownElement.innerText = `请等待 ${countdown} 秒...`;
+                } else {
+                    countdownElement.innerText = '';
+                    clearInterval(countdownTimer);
+                    canSend = true;
+                }
+            }, 1000);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
